@@ -1,0 +1,17 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "no-use-before-define": "off",
+    "no-console": ["error", { allow: ["warn", "error"] }],
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {},
+    "parser": "babel-eslint"
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+  },
+}
