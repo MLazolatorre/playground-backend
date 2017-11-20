@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run cc && cd ./dist && node ./src/bin/www",
+    "start": "npm run cc && cd ./dist && npm run start-node",
+    "start-node": "node ./src/bin/www",
     "cc": "grunt babel"
   },
   "dependencies": {
