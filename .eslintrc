@@ -1,8 +1,7 @@
 {
   "extends": "airbnb",
   "rules": {
-    "no-use-before-define": "off",
-    "no-console": ["error", { allow: ["warn", "error"] }],
+    "no-console": "off",
   },
   "parserOptions": {
     "ecmaVersion": 2017,
