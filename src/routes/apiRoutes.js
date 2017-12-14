@@ -1,4 +1,5 @@
 import express from 'express';
+import CommandsAPIHolder from '../API/CommandsAPIHolder';
 
 const router = express.Router();
 

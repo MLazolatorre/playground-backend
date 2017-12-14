@@ -8,8 +8,8 @@ import Utils from './Utils';
 
 import SERVER_CONTANTS from './SERVER_CONTANTS';
 
-import curlRoutes from '../routes/curlRoutes';
-import apiRoutes from '../routes/apiRoutes';
+import curlRoutes from '../routes/CurlRoutes';
+import apiRoutes from '../routes/ApiRoutes';
 
 import CommandsAPIHolder from '../API/CommandsAPIHolder';
 
@@ -120,7 +120,7 @@ export default class App {
    * [loadApiCommands description]
    */
   loadApiCommands() {
-    this.commandsAPIHolder = new CommandsAPIHolder();
+    this.commandsAPIHolder = CommandsAPIHolder.getInstance();
 
     this.commandsAPIHolder.loadAllCommands();
 

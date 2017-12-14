@@ -5,20 +5,32 @@
 import UserPartCommandAIP from './PartCommmandsAPI/UserPartCommandAIP/UserPartCommandAIP';
 import VideoPartCommandAIP from './PartCommmandsAPI/VideoPartCommandAPI/VideoPartCommandAPI';
 
+let instance = null;
+
 export default class CommandsAPIHolder {
   constructor() {
-    this.allCommands = [];
+    if (instance === null) {
+      instance = this;
 
-    this.allPartCommandsClass = [
-      UserPartCommandAIP,
-      VideoPartCommandAIP,
-    ];
+      this.allCommands = [];
 
-    this.allPartCommandsInstance = this.allPartCommandsClass.map(XClass => new XClass());
+      this.allPartCommandsClass = [
+        UserPartCommandAIP,
+        VideoPartCommandAIP,
+      ];
+
+      this.allPartCommandsInstance = this.allPartCommandsClass.map(XClass => new XClass());
+    }
+
+    return instance;
   }
 
   loadAllCommands() {
     this.allCommands = this.allPartCommandsInstance.reduce((tmp, partCommand) =>
       [...tmp, ...partCommand.getAllCommands()], []);
+  }
+
+  static getInstance() {
+    return instance || new CommandsAPIHolder();
   }
 }
