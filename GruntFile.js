@@ -1,3 +1,5 @@
+
+
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
@@ -14,6 +16,7 @@ module.exports = function (grunt) {
         dest: './dist/',
       },
     },
-  });
-  grunt.registerTask('default', ['babel']);
+  }); 
+	grunt.loadNpmTasks('grunt-newer');
+	grunt.registerTask('default', ['newer:babel']);
 };
