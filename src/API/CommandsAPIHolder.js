@@ -33,4 +33,8 @@ export default class CommandsAPIHolder {
   static getInstance() {
     return instance || new CommandsAPIHolder();
   }
+
+  isCommandExist(commandName) {
+    return this.allCommands.some(x => x.name === commandName);
+  }
 }

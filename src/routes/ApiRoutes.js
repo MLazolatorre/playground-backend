@@ -9,6 +9,19 @@ router.post('/api/:commandName', (req, res) => {
 
   console.log(query);
 
+  const commandsAPIHolder = CommandsAPIHolder.getInstance();
+
+  // check if the command exist
+  if (!commandsAPIHolder.isCommandExist(query.commandName)) {
+    res.json({
+      error: true,
+      response: `function ${query.commandName} doesn't exist`,
+    });
+  }
+
+  // here the command exist so we can execute it
+
+
   res.json(query);
 });
 
