@@ -135,7 +135,8 @@ export default class App {
       this.createHttpServer()
         .defindRoutes();
     }
-    this.startHttpServer();
-    this.loadApiCommands();
+
+    this.startHttpServer()
+      .loadApiCommands();
   }
 }
