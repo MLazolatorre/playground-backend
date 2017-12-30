@@ -4,25 +4,29 @@ import CommandsAPIHolder from '../API/CommandsAPIHolder';
 const router = express.Router();
 
 /* GET home page. */
-router.post('/api/:commandName', (req, res) => {
-  const { query } = req;
+router.get('/:commandName', (req, res) => {
+  const body = req.params;
 
-  console.log(query);
+  console.log(body);
 
   const commandsAPIHolder = CommandsAPIHolder.getInstance();
 
   // check if the command exist
-  if (!commandsAPIHolder.isCommandExist(query.commandName)) {
+  try {
+    commandsAPIHolder.executeCmd(body.commandName, {});
+  } catch (err) {
+    res.status(400);
+
     res.json({
       error: true,
-      response: `function ${query.commandName} doesn't exist`,
+      response: err,
     });
   }
 
-  // here the command exist so we can execute it
-
-
-  res.json(query);
+  res.json({
+    error: false,
+    response: body,
+  });
 });
 
 export default router;

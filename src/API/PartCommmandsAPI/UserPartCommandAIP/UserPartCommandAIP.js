@@ -5,6 +5,10 @@
 import APartCommandAPI from '../APartCommandAPI';
 import API_CONSTANTS from '../../API_CONSTANTS';
 
+/**
+ *
+ * @class
+ */
 export default class UserPartCommandAIP extends APartCommandAPI {
   constructor() {
     super();
