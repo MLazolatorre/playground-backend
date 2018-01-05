@@ -4,7 +4,7 @@ import CommandsAPIHolder from '../API/CommandsAPIHolder';
 const router = express.Router();
 
 /* GET home page. */
-router.get('/:commandName', (req, res) => {
+router.get('/:commandName', (req, res, next) => {
   const body = req.params;
 
   console.log(body);
@@ -15,12 +15,9 @@ router.get('/:commandName', (req, res) => {
   try {
     commandsAPIHolder.executeCmd(body.commandName, {});
   } catch (err) {
-    res.status(400);
+    err.status = 400;
 
-    res.json({
-      error: true,
-      response: err,
-    });
+    next(err);
   }
 
   res.json({
