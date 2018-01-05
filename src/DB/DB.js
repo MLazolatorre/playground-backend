@@ -1,5 +1,5 @@
 import neo4j from 'neo4j-driver';
-import DbCONSTANTS from './DBCONSTANTS';
+import DBCONSTANTS from './DBCONSTANTS';
 
 export default class DB {
   constructor({

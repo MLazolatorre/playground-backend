@@ -1,4 +1,4 @@
-export default class DbCONSTANTS {
+export default class DBCONSTANTS {
   static get MONGOOSE_STATES() {
     return {
       OPEN: 'open',
