@@ -15,6 +15,7 @@ export default class DB {
     this.username = username;
     this.password = password;
     this.port = port;
+    this.driver = null;
     this.db = null;
   }
 
@@ -23,9 +24,24 @@ export default class DB {
   }
 
   connect() {
-    this.db = neo4j;
+    this.driver = neo4j.driver('bolt://127.0.0.1:7687', neo4j.auth.basic('neo4j', 'neo4j'));
 
-    console.log('this.db');
-    console.log(this.db);
+    const session = this.driver.session();
+
+    session
+      .run('MERGE (james:Person {name : {nameParam} }) RETURN james.name AS name', { nameParam: 'James' })
+      .then((result) => {
+        result.records.forEach((record) => {
+          console.log(record.get('name'));
+        });
+        session.close();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  disconnect() {
+    this.driver.close();
   }
 }

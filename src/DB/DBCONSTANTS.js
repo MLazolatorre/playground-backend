@@ -8,4 +8,8 @@ export default class DBCONSTANTS {
       DISCONNECTED: 'disconnected',
     };
   }
+
+  static get MAIN_DB_NAME() {
+    return 'Playground';
+  }
 }

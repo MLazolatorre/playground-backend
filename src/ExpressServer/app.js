@@ -5,13 +5,15 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
 import Utils from './Utils';
-
 import SERVER_CONTANTS from './SERVER_CONTANTS';
+import DBCONSTANTS from '../DB/DBCONSTANTS';
 
 import curlRoutes from '../routes/CurlRoutes';
 import apiRoutes from '../routes/ApiRoutes';
 
 import CommandsAPIHolder from '../API/CommandsAPIHolder';
+
+import DB from '../DB/DB';
 
 const debug = require('debug')('playground-backend:server');
 
@@ -22,7 +24,6 @@ export default class App {
     this.serverHttp = null;
 
     this.port = Utils.normalizePort(process.env.PORT || `${SERVER_CONTANTS.PORT}`);
-
 
     this.expressObj.use(logger('dev'));
 
@@ -36,6 +37,8 @@ export default class App {
 
     this.expressObj.set('views', express.static(`${__dirname}/../curl/views`));
     this.expressObj.set('view engine', 'twig');
+
+    this.db = null;
   }
 
   /**
@@ -46,7 +49,7 @@ export default class App {
   }
 
   /**
-   * Launche the server
+   *
    */
   createHttpServer() {
     this.serverHttp = http.createServer(this.expressObj);
@@ -55,7 +58,7 @@ export default class App {
   }
 
   /**
-   *
+   * Launche the server
    */
   startHttpServer() {
     this.serverHttp.listen(this.port);
@@ -112,17 +115,31 @@ export default class App {
 
       // render the error page
       res.status(err.status || 500);
-      res.render('error');
+
+      res.json({
+        error: true,
+        response: err,
+      });
     });
   }
 
   /**
-   * [loadApiCommands description]
+   * Load Api commands in the API Holder
    */
   loadApiCommands() {
     this.commandsAPIHolder = CommandsAPIHolder.getInstance();
 
     this.commandsAPIHolder.loadAllCommands();
+
+    return this;
+  }
+
+  dbStart() {
+    this.db = new DB({
+      databaseName: DBCONSTANTS.MAIN_DB_NAME,
+    });
+
+    this.db.connect();
 
     return this;
   }
@@ -137,6 +154,11 @@ export default class App {
     }
 
     this.startHttpServer()
-      .loadApiCommands();
+      .loadApiCommands()
+      .dbStart();
+  }
+
+  quit() {
+    this.db.disconnect();
   }
 }
