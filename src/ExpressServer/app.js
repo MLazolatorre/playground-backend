@@ -6,14 +6,13 @@ import bodyParser from 'body-parser';
 
 import Utils from './Utils';
 import SERVER_CONTANTS from './SERVER_CONTANTS';
-import DBCONSTANTS from '../DB/DBCONSTANTS';
 
 import curlRoutes from '../routes/CurlRoutes';
 import apiRoutes from '../routes/ApiRoutes';
 
-import CommandsAPIHolder from '../API/CommandsAPIHolder';
+import clearNeo4jSession from './middlewares/ClearNeo4jSession';
 
-import DB from '../DB/DB';
+import CommandsAPIHolder from '../API/CommandsAPIHolder';
 
 const debug = require('debug')('playground-backend:server');
 
@@ -38,7 +37,8 @@ export default class App {
     this.expressObj.set('views', express.static(`${__dirname}/../curl/views`));
     this.expressObj.set('view engine', 'twig');
 
-    this.db = null;
+    // set up middlewares
+    this.expressObj.use(clearNeo4jSession);
   }
 
   /**
@@ -134,31 +134,16 @@ export default class App {
     return this;
   }
 
-  dbStart() {
-    this.db = new DB({
-      databaseName: DBCONSTANTS.MAIN_DB_NAME,
-    });
-
-    this.db.connect();
-
-    return this;
-  }
-
   /**
    * start the express server
    */
   start() {
     if (!this.serverHttp) {
       this.createHttpServer()
-        .defindRoutes();
+        .defindRoutes()
+        .loadApiCommands();
     }
 
-    this.startHttpServer()
-      .loadApiCommands()
-      .dbStart();
-  }
-
-  quit() {
-    this.db.disconnect();
+    this.startHttpServer();
   }
 }
