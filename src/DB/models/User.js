@@ -1,5 +1,6 @@
 import DB from '../DB';
 import DbUtils from '../DbUtils';
+import UserObject from './objects/UserOject';
 
 export default class User {
   constructor(context) {
@@ -19,11 +20,13 @@ export default class User {
     pwd,
   }) {
     try {
+      // the a user with the same login to
+      // check if the login is already used
       const existingLogin = await this.session.run('MATCH (user:User {login: {login}}) RETURN user', { login });
-
       if (existingLogin.records.length) throw new Error('login already exist');
 
-      const createdAccount = await this.session.run(
+      // create the user in the db
+      const createdUserResponse = await this.session.run(
         'CREATE (user:User {' +
             'id: {id},' +
             'login: {login},' +
@@ -36,12 +39,10 @@ export default class User {
           pwd: DbUtils.getCyphPwd(login, pwd),
           api_key: DbUtils.createApiKey(),
         },
-      ).records;
+      );
 
-      console.log('createdAccount');
-      console.log(createdAccount);
-
-      return createdAccount;
+      // return the Model Object, not the db Object
+      return new UserObject(createdUserResponse.records[0].get('user'));
     } catch (err) {
       throw err;
     }
