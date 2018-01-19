@@ -22,8 +22,6 @@ router.get('/:commandName', async (req, res, next) => {
   } catch (err) {
     err.status = 400;
 
-    console.log('on a catch l erreur');
-
     next(err);
   }
 });

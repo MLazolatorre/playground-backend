@@ -42,7 +42,27 @@ export default class User {
       );
 
       // return the Model Object, not the db Object
-      return new UserObject(createdUserResponse.records[0].get('user'));
+      return new UserObject(createdUserResponse);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async singin({
+    login,
+    pwd,
+  }) {
+    try {
+      const dbResponse = await this.session.run('MATCH (user:User {login: {login}, pwd: {pwd}}) RETURN user', {
+        login,
+        pwd: DbUtils.getCyphPwd(login, pwd),
+      });
+
+      if (!dbResponse.records.length) {
+        throw new Error('The login or the password doesn\'t fit with an account');
+      }
+
+      return new UserObject(dbResponse);
     } catch (err) {
       throw err;
     }

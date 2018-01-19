@@ -1,6 +1,6 @@
 export default class UserObject {
-  constructor(node) {
-    Object.entries(node.properties).forEach((property) => {
+  constructor(dbInfos) {
+    Object.entries(dbInfos.records[0].get('user').properties).forEach((property) => {
       const key = property[0];
       const value = property[1];
 

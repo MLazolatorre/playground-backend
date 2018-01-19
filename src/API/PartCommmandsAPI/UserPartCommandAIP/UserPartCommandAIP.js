@@ -19,6 +19,7 @@ export default class UserPartCommandAIP extends APartCommandAPI {
   getAllCommands() {
     return this.generateAllCommandsArrayUsingStrings([
       'createUser',
+      'singin',
     ]);
   }
 
@@ -29,6 +30,16 @@ export default class UserPartCommandAIP extends APartCommandAPI {
 
     return {
       token: newUser.api_key,
+    };
+  }
+
+  async singin(context, params) {
+    const user = new User(context);
+
+    const connectedUser = await user.singin(params);
+
+    return {
+      token: connectedUser.api_key,
     };
   }
 }

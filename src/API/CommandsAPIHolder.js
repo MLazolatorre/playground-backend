@@ -1,5 +1,5 @@
 /**
- * Holde all Commandes
+ * Holde all Commands
  */
 
 import UserPartCommandAIP from './PartCommmandsAPI/UserPartCommandAIP/UserPartCommandAIP';
@@ -51,14 +51,14 @@ export default class CommandsAPIHolder {
   /**
    * is the command exist
    * @param  {string}  commandName - the command name
-   * @return {Boolean} - the Object {name, func} linked to the commande if the commande exist, else null
+   * @return {Boolean} - the Object {name, func} linked to the command if the command exist, else null
    */
   isCommandExist(commandName) {
     return this.allCommands.find(x => x.name === commandName);
   }
 
   /**
-   * check if the commande exite and return the executable command function
+   * check if the command exite and return the executable command function
    * @param  {[type]} cmdName - The function's name
    * @throws - Will throw an error if the command doesn't exist
    * @return {[type]} - The executable function
@@ -79,7 +79,7 @@ export default class CommandsAPIHolder {
   /**
    * execute the command in parameter
    * @param  {string} cmdName - The command name to execute
-   * @throws - Will throw an error if there is a probleme while the commande execution
+   * @throws - Will throw an error if there is a probleme while the command execution
    * @param  {Object} params - The parameters for the command
    */
   async executeCmd(cmdName, ...params) {
