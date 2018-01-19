@@ -25,6 +25,10 @@ export default class UserPartCommandAIP extends APartCommandAPI {
   async createUser(context, params) {
     const user = new User(context);
 
-    return user.createUser(params);
+    const newUser = await user.createUser(params);
+
+    return {
+      token: newUser.api_key,
+    };
   }
 }
