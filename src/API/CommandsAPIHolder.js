@@ -49,30 +49,49 @@ export default class CommandsAPIHolder {
   }
 
   /**
-   * is the command in parameter exist
-   * @param  {string}  commandName - the command name to check
-   * @return {Boolean}             - the function that match with the commandName
+   * is the command exist
+   * @param  {string}  commandName - the command name
+   * @return {Boolean} - the Object {name, func} linked to the commande if the commande exist, else null
    */
   isCommandExist(commandName) {
-    return this.allCommands.find(x => x.name === commandName).func;
+    return this.allCommands.find(x => x.name === commandName);
+  }
+
+  /**
+   * check if the commande exite and return the executable command function
+   * @param  {[type]} cmdName - The function's name
+   * @throws - Will throw an error if the command doesn't exist
+   * @return {[type]} - The executable function
+   */
+  getExecutableCommand(cmdName) {
+    const cmd = this.isCommandExist(cmdName);
+
+    if (!cmd) {
+      const error = new Error(`The command: '${cmdName}' doesn't exist`);
+      error.code = 415;
+
+      throw error;
+    }
+
+    return cmd.func;
   }
 
   /**
    * execute the command in parameter
-   * @param  {string} cmdName - the command name to execute
-   * @param  {Object} params - the parameters for the command
+   * @param  {string} cmdName - The command name to execute
+   * @throws - Will throw an error if there is a probleme while the commande execution
+   * @param  {Object} params - The parameters for the command
    */
-  executeCmd(cmdName, params) {
-    const cmd = this.isCommandExist(cmdName);
-
-    if (typeof cmd === 'undefined') {
-      throw new Error(`the command ${cmdName} doesn't exist`);
-    }
+  async executeCmd(cmdName, ...params) {
+    const cmd = this.getExecutableCommand(cmdName);
 
     try {
-      cmd.call(null, params);
+      return cmd.call(null, ...params);
     } catch (err) {
-      throw new Error(`Impossible to execute the command ${cmdName}`);
+      const error = new Error(`Impossible to execute the command: '${cmdName}'`);
+      error.code = 415;
+
+      throw err;
     }
   }
 }

@@ -1,47 +1,27 @@
 import neo4j from 'neo4j-driver';
 import DBCONSTANTS from './DBCONSTANTS';
 
+let instance = null;
+
 export default class DB {
-  constructor({
-    databaseName,
-    ip = 'localhost',
-    port = '27017',
-    username = false,
-    password = false,
-  }) {
-    this.ip = ip;
-    this.isConnectedVar = false;
-    this.databaseName = databaseName;
-    this.username = username;
-    this.password = password;
-    this.port = port;
-    this.driver = null;
-    this.db = null;
+  constructor() {
+    this.driver = neo4j.driver(
+      `${DBCONSTANTS.URL}:${DBCONSTANTS.PORT}`,
+      neo4j.auth.basic(DBCONSTANTS.DB_IDS.LOGIN, DBCONSTANTS.DB_IDS.PWD),
+    );
   }
 
-  get isConnected() {
-    return this.isConnectedVar;
+  static getInstance() {
+    if (instance) return instance;
+
+    instance = new DB();
+
+    return instance;
   }
 
-  connect() {
-    this.driver = neo4j.driver('bolt://127.0.0.1:7687', neo4j.auth.basic('neo4j', 'neo4j'));
+  getSession(context) {
+    if (context.neo4jSession) return context.neo4jSession;
 
-    const session = this.driver.session();
-
-    session
-      .run('MERGE (james:Person {name : {nameParam} }) RETURN james.name AS name', { nameParam: 'James' })
-      .then((result) => {
-        result.records.forEach((record) => {
-          console.log(record.get('name'));
-        });
-        session.close();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  disconnect() {
-    this.driver.close();
+    return this.driver.session();
   }
 }

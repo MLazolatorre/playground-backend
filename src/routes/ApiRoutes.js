@@ -4,26 +4,28 @@ import CommandsAPIHolder from '../API/CommandsAPIHolder';
 const router = express.Router();
 
 /* GET home page. */
-router.get('/:commandName', (req, res, next) => {
+router.get('/:commandName', async (req, res, next) => {
   const body = req.params;
-
-  console.log(body);
 
   const commandsAPIHolder = CommandsAPIHolder.getInstance();
 
+  let result = 0;
+
   // check if the command exist
   try {
-    commandsAPIHolder.executeCmd(body.commandName, {});
+    result = await commandsAPIHolder.executeCmd(body.commandName, req, { login: 'marc', pwd: 'hoho' });
+
+    res.json({
+      error: false,
+      response: result,
+    });
   } catch (err) {
     err.status = 400;
 
+    console.log('on a catch l erreur');
+
     next(err);
   }
-
-  res.json({
-    error: false,
-    response: body,
-  });
 });
 
 export default router;

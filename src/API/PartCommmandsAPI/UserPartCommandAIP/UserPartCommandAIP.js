@@ -1,9 +1,10 @@
 /**
  * All function refer to the user part
  */
-
 import APartCommandAPI from '../APartCommandAPI';
 import API_CONSTANTS from '../../API_CONSTANTS';
+
+import User from '../../../DB/models/User';
 
 /**
  *
@@ -17,13 +18,13 @@ export default class UserPartCommandAIP extends APartCommandAPI {
 
   getAllCommands() {
     return this.generateAllCommandsArrayUsingStrings([
-      'addUser',
+      'createUser',
     ]);
   }
 
-  addUser() {
-    this.a = 1;
+  async createUser(context, params) {
+    const user = new User(context);
 
-    console.log('Add user function has been called');
+    return user.createUser(params);
   }
 }
